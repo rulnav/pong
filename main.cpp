@@ -19,6 +19,21 @@ public:
     Vector2 direction;
     float radius;
 }ball;
+class rectClass {
+public:
+    rectClass () {}
+    rectClass(const Vector2& position, const Vector2& direction, const float& radius): 
+        position(position), 
+        direction(direction),
+        radius(radius)
+    {}
+    void move(){
+        position = Vector2Subtract(position, direction);
+    }
+    Vector2 position;
+    Vector2 direction;
+    float radius;
+}ball;
 void processInput(){
     //process player input
 }
