@@ -1,45 +1,17 @@
 #include <raylib.h>
 #include <raymath.h>
+#include "constants.hpp"
+#include "ballClass.hpp"
+#include "rectClass.hpp"
 
-const int screenWidth = 800;
-const int screenHeight = 450;
-
-class ballClass {
-public:
-    ballClass () {}
-    ballClass(const Vector2& position, const Vector2& direction, const float& radius): 
-        position(position), 
-        direction(direction),
-        radius(radius)
-    {}
-    void move(){
-        position = Vector2Subtract(position, direction);
-    }
-    Vector2 position;
-    Vector2 direction;
-    float radius;
-}ball;
-class rectClass {
-public:
-    rectClass () {}
-    rectClass(const Vector2& position, const Vector2& direction, const float& radius): 
-        position(position), 
-        direction(direction),
-        radius(radius)
-    {}
-    void move(){
-        position = Vector2Subtract(position, direction);
-    }
-    Vector2 position;
-    Vector2 direction;
-    float radius;
-}ball;
+class ballClass ball;
+class rectClass p1_rectangle, p2_rectangle;
 void processInput(){
     //process player input
-}
-void updateState(){
-    //update game state
-    ball.move();
+    if (IsKeyDown(KEY_UP)) p1_rectangle.moveUp();
+    else if (IsKeyDown(KEY_DOWN)) p1_rectangle.moveDown();
+    if (IsKeyDown(KEY_W)) p2_rectangle.moveUp();
+    else if (IsKeyDown(KEY_S)) p2_rectangle.moveDown();
 }
 void render(){
     //render image
@@ -47,13 +19,26 @@ void render(){
     ClearBackground(RAYWHITE);
     DrawText("move the ball with arrow keys", 10, 10, 20, DARKGRAY);
     DrawCircleV(ball.position, ball.radius, BLUE);
+    DrawRectangleV(p1_rectangle.position, p1_rectangle.size, BLUE);
+    DrawRectangleV(p2_rectangle.position, p2_rectangle.size, BLUE);
     EndDrawing();
+}
+void updateState(){
+    //update game state
+    ball.move();
+    render();
 }
 void setup(){
     //setup initial game state
     ball = ballClass( { (float)screenWidth/2, (float)screenHeight/2 },
-          {-1.0, 0.0},
+          {-1.0, 1.0},
           25.0f );
+    p1_rectangle = rectClass( {0.0f, 0.0f},
+                              {15.0f, screenHeight/5.0f},
+                              20.0f );
+    p2_rectangle = rectClass( {screenWidth-15.0f, 0.0f},
+                              {15.0f, screenHeight/5.0f},
+                              20.0f );
     render();
 }
 int main(void)
@@ -73,15 +58,11 @@ int main(void)
     {
         // Update
         //----------------------------------------------------------------------------------
-        // if (IsKeyDown(KEY_RIGHT)) ballPosition.x += 2.0f;
-        // if (IsKeyDown(KEY_LEFT)) ballPosition.x -= 2.0f;
-        // if (IsKeyDown(KEY_UP)) ballPosition.y -= 2.0f;
-        // if (IsKeyDown(KEY_DOWN)) ballPosition.y += 2.0f;
-        updateState();
+        processInput();
         //----------------------------------------------------------------------------------
 
         // Draw
-        render();
+        updateState();
         //----------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------
     }
