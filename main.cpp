@@ -6,6 +6,28 @@
 
 class ballClass ball;
 class rectClass p1_rectangle, p2_rectangle;
+void changeDirectionIfWallCollision(){
+    if( (ball.position.y+ball.radius >= screenHeight-1.0 ) ||
+        (ball.position.y-ball.radius <= 1.0 ) ){
+        ball.direction.y = -ball.direction.y;
+    }
+}
+bool isScored(){
+    if( (ball.position.x+ball.radius >= screenWidth-1.0f ) ||
+        (ball.position.x-ball.radius <= 1.0f ) ){
+        return true;
+    }
+    return false;
+}
+void changeDirectionIfRectCollision(const rectClass& player){
+    if( (ball.position.x+ball.radius >= player.position.x - 1.0f ) ||
+        (ball.position.x-ball.radius <= player.position.x + player.size.x + 1.0f ) ){
+        if( (ball.position.y <= (player.position.y + player.size.y)  ) &&
+            (ball.position.y >= player.position.y) ){
+            ball.direction.x = -ball.direction.x;
+        }
+    }
+}
 void processInput(){
     //process player input
     if (IsKeyDown(KEY_UP)) p1_rectangle.moveUp();
@@ -23,11 +45,6 @@ void render(){
     DrawRectangleV(p2_rectangle.position, p2_rectangle.size, BLUE);
     EndDrawing();
 }
-void updateState(){
-    //update game state
-    ball.move();
-    render();
-}
 void setup(){
     //setup initial game state
     ball = ballClass( { (float)screenWidth/2, (float)screenHeight/2 },
@@ -39,6 +56,18 @@ void setup(){
     p2_rectangle = rectClass( {screenWidth-15.0f, 0.0f},
                               {15.0f, screenHeight/5.0f},
                               20.0f );
+    render();
+}
+void updateState(){
+    //update game state
+    ball.move();
+    changeDirectionIfWallCollision();
+    changeDirectionIfRectCollision(p1_rectangle);
+    changeDirectionIfRectCollision(p2_rectangle);
+    if(isScored()){
+        setup();   
+        return;
+    }
     render();
 }
 int main(void)
@@ -65,6 +94,8 @@ int main(void)
         updateState();
         //----------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------
+        
+        // check for score
     }
 
     // De-Initialization

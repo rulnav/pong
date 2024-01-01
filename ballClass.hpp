@@ -3,7 +3,6 @@
 
 #include <raylib.h>
 #include <raymath.h>
-#include "constants.hpp"
 
 class ballClass {
 public:
@@ -15,16 +14,6 @@ public:
     {}
     void move(){
         position = Vector2Add(position, direction);
-        checkWallCollision();
-    }
-    void checkWallCollision(){
-        if( (position.y+radius >= screenHeight-1.0 ) ||
-            (position.y-radius <= 1.0 ) ){
-            direction.y = -direction.y;
-        }
-    }
-    bool checkGoal(){
-    
     }
     void checkRectangleCollision(){
     }
