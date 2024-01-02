@@ -19,14 +19,26 @@ bool isScored(){
     }
     return false;
 }
-void changeDirectionIfRectCollision(const rectClass& player){
-    if( (ball.position.x+ball.radius >= player.position.x - 1.0f ) ||
-        (ball.position.x-ball.radius <= player.position.x + player.size.x + 1.0f ) ){
-        if( (ball.position.y <= (player.position.y + player.size.y)  ) &&
-            (ball.position.y >= player.position.y) ){
-            ball.direction.x = -ball.direction.x;
-        }
-    }
+// void changeDirectionIfRectCollision(const rectClass& player){
+//     if((ball.position.x+ball.radius >= player.position.x - 1.0f ) ||
+//        (ball.position.x-ball.radius <= player.position.x + player.size.x + 1.0f ) &&
+//        (ball.position.y <= (player.position.y + player.size.y)  ) &&
+//        (ball.position.y >= player.position.y) ){
+//         
+//         ball.direction.x = -ball.direction.x;
+//     }
+// }
+void changeDirectionIfp2Collision(){
+    if(ball.position.x + ball.radius < p2_rectangle.position.x) return;
+    if(ball.position.y < p2_rectangle.position.y) return;
+    if(ball.position.y > p2_rectangle.position.y + p2_rectangle.size.y) return;
+    ball.direction.x = -ball.direction.x;
+}
+void changeDirectionIfp1Collision(){
+    if(ball.position.x - ball.radius > p1_rectangle.position.x + p1_rectangle.size.x) return;
+    if(ball.position.y < p1_rectangle.position.y) return;
+    if(ball.position.y > p1_rectangle.position.y + p1_rectangle.size.y) return;
+    ball.direction.x = -ball.direction.x;
 }
 void processInput(){
     //process player input
@@ -62,8 +74,8 @@ void updateState(){
     //update game state
     ball.move();
     changeDirectionIfWallCollision();
-    changeDirectionIfRectCollision(p1_rectangle);
-    changeDirectionIfRectCollision(p2_rectangle);
+    changeDirectionIfp1Collision();
+    changeDirectionIfp2Collision();
     if(isScored()){
         setup();   
         return;
